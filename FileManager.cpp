@@ -13,7 +13,11 @@ File* FileManager::findFile(const std::string& name) const {
 }
 
 void FileManager::addFile(const std::string& name, const std::string& content) {
-    files.push_back(std::make_unique<File>(name, content));
+    if (findFile(name) == nullptr){
+        files.push_back(std::make_unique<File>(name, content));
+    } else {
+        std::cerr << "File already exists. Please write to file." << std::endl;
+    }
 }
 
 void FileManager::removeFile(const std::string& name) {

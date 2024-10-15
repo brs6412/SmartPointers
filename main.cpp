@@ -1,6 +1,7 @@
-#include <iostream>
 #include "File.h"
 #include "FileManager.h"
+#include <iostream>
+#include <limits>
 
 void appendExclamation(std::string& str) {
     str += "!";
@@ -61,7 +62,79 @@ void testFileManager() {
     std::cout << "\n";
 }
 
+void printBanner() {
+    std::cout << "****************\n";
+    std::cout << "* File Manager *\n";
+    std::cout << "****************\n";
+}
+
+void printMenu() {
+    std::cout << "\n** SELECT OPTION **\n";
+    std::cout << "-------------------\n";
+    std::cout << "1. Add file\n";
+    std::cout << "2. Read file\n";
+    std::cout << "3. List files\n";
+    std::cout << "4. Write new content to a file\n";
+    std::cout << "5. Remove a file\n";
+    std::cout << "(x) to quit\n";
+}
+
+std::string promptForInput(const std::string& prompt) {
+    std::string input;
+
+    std::cout << prompt;
+    std::getline(std::cin, input);
+
+    while (input.empty()) {
+        std::cout << "Input cannot be empty. " << prompt;
+        std::getline(std::cin, input);
+    }
+
+    return input;
+}
+
 int main() {
-    testFileManager();
+    printBanner();
+    FileManager fileManager;
+
+    std::string userin = "";
+    std::string fileName = "";
+    std::string content = "";
+    while (userin != "x") {
+        printMenu();
+        std::cout << "\nEnter an option: ";
+        std::cin >> userin;
+
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        fileName = "";
+        content = "";
+
+        if (userin == "1"){
+            fileName = promptForInput("Enter filename to add: ");
+            content = promptForInput("Enter contents to write to file: ");
+            fileManager.addFile(fileName, content);
+        } else if (userin == "2") {
+            fileName = promptForInput("Enter filename to read: ");
+            fileManager.readFile(fileName);
+            std::cout << "\n";
+        } else if (userin == "3") {
+            std::cout << "Current files in the manager:\n";
+            fileManager.listFiles();
+            std::cout << "\n";
+        } else if (userin == "4"){
+            fileName = promptForInput("Enter filename to edit: ");
+            content = promptForInput("Enter contents to write to file: ");
+            fileManager.writeFile(fileName, content);
+        } else if (userin == "5") {
+            fileName = promptForInput("Enter filename to remove: ");
+            fileManager.removeFile(fileName);
+        } else if (userin == "x") {
+            break;
+        } else {
+            std::cout << "Invalid option. Please try again.\n";
+        }
+    }
+    std::cout << "Have a great day!\n";
     return 0;
 }
